@@ -1,0 +1,43 @@
+<%- include('../includes/header.ejs')%>
+</head>
+<body>
+    <%- include('../includes/head.ejs')%>
+    <a href="/admin">Admin</a>
+    <main>
+        <% if(universities.length > 0) { %>
+        <div class="grid" style="align-items: center;">
+            <% for (let university of universities) { %>
+            <article class="card__product-item" style="border: 1px solid black;align-items: center;max-width:25rem;padding:1rem;margin-left:35%;">
+                <header class="card__header">
+                    <h1 class="product__title"><%= university.name %></h1>
+                </header>
+                <div class="card__image">
+                </div>
+                <div class="card__content">
+                    <p class="product__user"><a style="text-decoration:none;" href="/profile/<%=university.userId%>"><%= university.name%></a></p>
+                    <p><%= university.email%></p>
+                </div>
+                <div class="card__actions">
+                    <% if(isAuthenticated) {%>
+                                                    
+                    <%} %>
+                </div>
+            </article>
+            <% } %>
+        </div>
+        <section class="pagination">
+            <%for(var i=0;i<numPages;i++){%>
+                <a <%if(page==i+1){%>class="selectedPage"<%}else{%>class="unselectedPage"<%}%> href="/?page=<%=i+1%>"><%=i+1%></a>
+            <%}%>
+        </section>
+        <% } else { %>
+            <h1>No Products Found!</h1>
+            <section class="pagination">
+                <%for(var i=0;i<numPages;i++){%>
+                    <a <%if(page==i+1){%>class="selectedPage"<%}else{%>class="unselectedPage"<%}%> href="/?page=<%=i+1%>"><%=i+1%></a>
+                <%}%>
+            </section>
+        <% } %>
+    </main>
+</body>
+</html>

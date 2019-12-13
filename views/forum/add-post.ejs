@@ -1,0 +1,42 @@
+<%- include('../includes/header.ejs')%>
+<link rel="stylesheet" href="/css/add.css">
+</head>
+<body>
+    <%- include('../includes/head.ejs') %>
+    <%if(isAuthenticated){%>
+    <main id="center" style="border:1px solid rgb(0, 50, 98)">
+        <form class="post-form" action="/admin/add" method="POST" enctype="multipart/form-data">
+            <div class="form-control">
+                <label for="title" id="post_label">Title</label>
+                <input type="text" name="title" id="title">
+            </div>
+            <div class="form-control">
+                <label for="image" id="post_label">Image</label>
+                <input type="file" name="image" id="image">
+            </div>
+            <!--<div class="form-control">
+                <label for="imageUrl">Image URL</label>
+                <input type="text" name="imageUrl" id="imageUrl">
+            </div>-->
+            <div class="form-control">
+                <label for="price" id="post_label">Price</label>
+                <input type="number" name="price" id="price" step="0.01">
+            </div>
+            <div class="form-control">
+                <label for="description" id="post_label">Description</label>
+                <textarea name="description" id="description" rows="5"></textarea>
+            </div>
+            <button class="btn" type="submit" style="background-color:rgb(0, 50, 98)">Post</button>
+        </form>
+    </main>
+    <%} else{%>
+    <script>
+        window.onload = function(){
+            setTimeout(function(){
+                window.location.href = "/login";
+            },1);
+        };
+    </script>
+    <%}%>
+</body>
+</html>

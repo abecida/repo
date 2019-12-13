@@ -1,0 +1,153 @@
+<%- include('../includes/header.ejs')%>
+</head>
+<body>
+    <%- include('../includes/head.ejs')%>
+    <h2 style="text-align:center;"><b>Sign Up</b></h2>
+    <div id="signup_form">
+        <form method="POST" action="/signup" style="vertical-align: middle">
+            <!-- <div id="form_name" style="display:flex;flex-direction:row;margin-left:40%;margin-top:3rem;"> -->
+            <input id="first_name" name="first_name" type="text" placeholder="First Name" style="margin-right:1rem;width:10rem;">
+            <input id="last_name" name="last_name" type="text" placeholder="Last Name" style="width:10rem;">
+            <!-- </div> -->
+            <br>
+            <br>
+            <input id="school_name" name="school_name" type="text" placeholder="School Name" onkeyup="search()" style="width:25rem;"> <!-- Asyncronous Search -->
+            <div class="dropdown-content" id="dropdown" style="list-style: none;"></div>
+            <input id="real_name" name="real_name" type="hidden">
+            <br>
+            <div id="school_email" style="display:none;">
+                <div id="oneline" style="text-align:center;align-items:center;width:20rem;;margin:auto;">
+                    <input id="type_email" name="type_email" type="text" placeholder="School Email" onkeyup="change_verification()">
+                    <p id="later_half_school_email"></p>
+                    <input type="hidden" name="later_half_school_email" id="school_email2">
+                </div>
+                <div id="send_verification">
+                    <p >a Verification Email will be sent to this address</p>
+                </div>
+            </div>
+            <br>
+            <div id="passwords" style="display:none;">
+                <input id="pw1" name="pw1" type="password" placeholder="New Password" onkeyup="check_passwords2()" style="width:15rem;margin:auto;">
+                <br>
+                <input id="pw2" name="pw2" type="password" placeholder="Confirm Password" onkeyup="check_passwords()" style="width:15rem;margin:auto;">
+                <div id="pw_error"></div>
+            </div>
+            <br>
+            <button id="submit_button" class="btn" type="submit" style="display:none;width:10rem;margin:auto;">Signup</button>
+        </form>
+    </div>
+<script>
+    document.addEventListener('keydown', function(event) {
+        if(event.keyCode == 13) {
+            if(event.target.nodeName =='INPUT'){
+                event.preventDefault();
+                return false;
+            }
+        }
+    });
+
+    // asycronous check
+    function search(){
+        const school = document.getElementById("school_name").value;
+        const fetch_url = '/get/universities?name=' + school;
+        fetch(fetch_url, {
+            method: 'GET'
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+            var dropdown = document.getElementById("dropdown");
+            while (dropdown.hasChildNodes()) {
+                dropdown.removeChild(dropdown.childNodes[0]);
+            }
+            dropdown.style.border = '';
+            if(school.length > 0){
+                dropdown.style.border = '1px solid black';
+                var index = 0;
+                while(index < data.universities.length){
+                    const university = data.universities[index];
+                    var btn = document.createElement("LI");
+                    var name = university.name;
+                    btn.appendChild(document.createTextNode(university.name));
+                    const email = university.email;
+                    btn.setAttribute("onclick", `chose_school('${name}/${email}')`);
+                    btn.setAttribute("id", "college");
+                    btn.style.marginBottom = "0.1rem;";
+                    dropdown.appendChild(btn);
+                    index += 1;
+                }
+            }
+        })
+        .catch(err => console.log(err));
+    }
+
+    function chose_school(element) {
+        var name = element.split("/")[0];
+        var email = element.split("/")[1];
+        document.getElementById("school_name").value = name;
+        var dropdown = document.getElementById("dropdown");
+        while (dropdown.hasChildNodes()) {
+            dropdown.removeChild(dropdown.childNodes[0]);
+        }
+        document.getElementById("real_name").value = name;
+        document.getElementById("school_email").style.display = '';
+        document.getElementById("later_half_school_email").innerText = '@'+email;
+        document.getElementById("school_email2").value = '@'+email;
+        var dropdown = document.getElementById("dropdown");
+        dropdown.style.border = '';
+    };
+
+    function check_passwords() {
+        var dropdown = document.getElementById("pw_error");
+        while (dropdown.hasChildNodes()) {
+            dropdown.removeChild(dropdown.childNodes[0]);
+        }
+        const pw1 = document.getElementById("pw1").value;
+        const pw2 = document.getElementById("pw2").value;
+        if(pw1 != pw2){
+            var error_message = document.createElement("P");
+            error_message.appendChild(document.createTextNode("Passwords Don't Match"));
+            error_message.style.color = 'red';
+            dropdown.appendChild(error_message);
+            document.getElementById("submit_button").style.display = 'none';
+        } else {
+            document.getElementById("submit_button").style.display = '';
+        }
+    }
+
+    function check_passwords2() {
+        if(document.getElementById("pw2").value.length > 0){
+            var dropdown = document.getElementById("pw_error");
+            while (dropdown.hasChildNodes()) {
+                dropdown.removeChild(dropdown.childNodes[0]);
+            }
+            const pw1 = document.getElementById("pw1").value;
+            const pw2 = document.getElementById("pw2").value;
+            if(pw1 != pw2){
+                var error_message = document.createElement("P");
+                error_message.appendChild(document.createTextNode("Passwords Don't Match"));
+                error_message.style.color = 'red';
+                dropdown.appendChild(error_message);
+                document.getElementById("submit_button").style.display = 'none';
+            } else {
+                document.getElementById("submit_button").style.display = '';
+            }
+        }
+    }
+
+    function change_verification() {
+        /*
+        var div = document.getElementById("send_verification");
+        while (div.hasChildNodes()) {
+            div.removeChild(div.childNodes[0]);
+        }
+        */
+        var email = document.getElementById("type_email");
+        if(email.value.length >= 2) {
+            document.getElementById("passwords").style.display = '';
+        }
+    }
+</script>
+</body>
+</html>

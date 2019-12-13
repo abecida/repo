@@ -1,0 +1,30 @@
+<%- include('../includes/header.ejs')%>
+</head>
+<body>
+    <%- include('../includes/head.ejs')%>
+    <!--<h2 style="text-align:center;"><b>Login</b></h2>-->
+    <%if(message){%>
+    <p id="message"><%=message%></p>
+    <%}%>
+    <div id="signup_form">
+        <form method="POST" action="/login">
+            <input id="email" name="email" type="text" placeholder="E-mail" style="width:25rem;height:3rem;margin-bottom:0.5rem;border:1px solid rgb(0, 50, 98);padding-left:1rem;">
+            <br>
+            <input id="password" name="password" type="password" placeholder="Password" style="width:25rem;height:3rem;border:1px solid rgb(0, 50, 98);padding-left:1rem;margin-bottom:0.5rem">
+            <br>
+            <button type="submit" class="btn" style="width:17rem;height:2.5rem;background-color:rgb(0, 50, 98);border-radius:10px;margin-right:1rem;"><b>Log In</b></button>
+            <a href="/reset" id="forgot-pw" style="font-size:0.7rem;margin-left:1rem;">Forgot Password?</a>
+        </form>
+    </div>
+    <script>
+    const message = <%=message%>
+    if(message) {
+        window.onload = function(){
+          setTimeout(function(){
+              document.getElementById("message").style.display = 'none';
+          },3000);
+        };
+    }
+    </script>
+</body>
+</html>

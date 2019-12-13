@@ -1,0 +1,48 @@
+<%- include('../includes/header.ejs')%>
+</head>
+<body>
+    <%- include('../includes/head.ejs')%>
+    <main class="centered">
+        <%if(user.user_name){%>
+            <h1><%= user.user_name%></h1>
+        <%}else{%>
+            <h1><%= user.first_name %> <%=user.last_name%></h1>
+        <%}%>
+        <hr>
+        <div>
+            <img src="/<%= user.image %>" alt="<%= user.first_name %>" class="userProfilePicture" />
+        </div>
+        
+        <p>Contact: <%= user.school_email %></p>
+        <p><%=user.bio%></p>
+        <% if(isAuthenticated) {%>
+            <div class="centered">
+                <%if(self){%>
+                    <a href="/profile/edit">Edit</a>
+                <%}else{%>
+                    <%if(followStatus){%>
+                        <form action="/profile/unfollow" method="POST">
+                            <button class="follow_btn" type="submit">Unfollow</button>
+                            <input type="hidden" name="userId" value="<%= user._id %>">
+                        </form>
+                    <%} else{%>
+                        <form action="/profile/follow" method="POST">
+                            <button class="follow_btn" type="submit">Follow</button>
+                            <input type="hidden" name="userId" value="<%= user._id %>">
+                        </form>
+                    <%}%>
+                <%}%>
+                <div class="follow_section">
+                    <a href="/followers/<%=user._id%>" style="text-decoration:none;"><p style="margin-left:1rem;">Followers: <%=user.followers.length%></p></a>
+                    <a href="/following/<%= user._id%>" style="text-decoration:none;"><p style="margin-left:1rem;">Following: <%=user.following.length%></p></a>
+                    <a href="/profile/products/<%=user._id%>" style="text-decoration:none;"><p style="margin-left:1rem;">Posts: <%=user.posts.length%></p></a>
+                </div>
+            </div>
+        <%} else {%>
+            <div class="centered">
+                <a href="/followers/<%=user._id%>" style="text-decoration:none;"><p style="margin-left:1rem;">Followers: <%=user.followers.length%></p></a>
+            </div>
+        <%}%>
+    </main>
+</body>
+</html>

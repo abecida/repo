@@ -1,0 +1,66 @@
+<header class="main-header">
+        <nav class="main-header__nav" style="z-index:1;">
+            <div style="display:flex;align-items: center;">
+                <a href="/"><img id="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS98HHLrhoAQgJtCh2YdxJy4lhyfk3t8PaLl527QlYu8WscmZjGTQ&s"></a>
+                <form method="POST" action="/search">
+                    <input id="main_search" type="text" placeholder="Search" style="margin-left:1.5rem;width:25rem; height:2rem; padding:auto; justify-content:space-between;padding-left:1rem;font-size:1rem;">
+                </form>
+                <!--
+                <ul class="main-header__item-list">
+                    <li class="main-header__item"><a class="<%= (path === '/') ? 'active' : '' %>" href="/"><b>Discover</b></a></li>
+                    <li class="main-header__item"><a class="<%= (path === '/connect') ? 'active' : '' %>" href="/connect"><b>Connect</b></a></li>
+                </ul>
+                -->
+            </div>
+
+            <ul class="main-header__item-list">
+                <% if(!isAuthenticated) {%>
+                    <%if(path=='/login'){%>
+                        <li class="main-header__item">
+                            <a style="margin-right:1rem;" class="<%= (path === '/login') ? 'active' : '' %>" href="/signup"><b>Sign Up</b></a>
+                        </li>
+                    <%}else{%>
+                        <li class="main-header__item">
+                            <a style="margin-right:1rem;" class="<%= (path === '/signup') ? 'active' : '' %>" href="/login"><b>Login</b></a>
+                        </li>
+                    <%}%>
+                <% } else {%>
+                    <div class="profile" style="float:right;">
+                        <p class="userName" style="margin-right:1rem;color:white;"><%= first_name%></p>
+                        <%let userImageUrl; if(userImage){userImageUrl = userImage;}else{userImageUrl = 'images/user.png'}%>
+                        <img id="image" onclick="dropdown()" src="/<%= userImageUrl%>" class="userImage"/>
+                    </div>
+                <%}%>
+            </ul>
+        </nav>
+        <div id="dropdown_menu" style="display:none;z-index:2;margin-top:-0.4rem;list-style:none;font-size:0.8rem;">
+            <a href="/profile" style="text-decoration:none !important;"><li id="option" style="text-decoration:none !important;list-style:none;max-width:100%;margin:auto;margin-bottom:0.2rem;padding-top:0.2rem;">Profile</li></a>
+            <a style="text-decoration: none;" href="/saved"><li id="option" style="text-decoration:none !important;list-style:none;margin-bottom:0.2rem;">Saved</li></a>
+            <a style="text-decoration:none;" href="/admin/posts"><li id="option" style="text-decoration:none !important;list-style:none;margin-bottom:0.2rem;">My Products</li></a>
+            <form id="signout" method="POST" action="/signout">
+                <li id="option" onclick="document.getElementById('signout').submit()" style="list-style:none;max-width:100%;margin:auto;padding-bottom:0.2rem;">Sign Out</li>
+            </form>
+        </div>
+    </header>
+    <script>
+        window.onclick = function(event) {
+            if (!event.target.matches('#image')) {
+                var dropdown = document.getElementById("dropdown_menu");
+                var search = document.getElementById("main_search");
+                dropdown.style.display = 'none';
+                if(event.target.matches('#main_search')) {
+                    search.style.backgroundColor = 'white';
+                } else {
+                    if(search.value.length == 0) {
+                        search.style.backgroundColor = '#24292e';
+                    }
+                }
+            }
+        }
+        function dropdown(){
+            console.log("Dropdown");
+            let dropdown = document.getElementById("dropdown_menu");
+            if(dropdown.style.display == 'none') document.getElementById("dropdown_menu").style.display = 'inline';
+            else document.getElementById("dropdown_menu").style.display = 'none';
+        }
+    </script>

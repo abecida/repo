@@ -1,0 +1,56 @@
+<%- include('../includes/header.ejs')%>
+</head>
+<body>
+    <%- include('../includes/head.ejs')%>
+    <main>
+        <a id="new_post" style="text-decoration:none !important;max-width:5rem;background-color:blue;border-radius:5%;padding:5px;" href="/add-post">New Post</a>
+        <% if(posts.length > 0) { %>
+        <div class="grid">
+            <% for (let post of posts) { %>
+            <article class="card__product-item">
+                <header class="card__header">
+                    <h1 class="product__title"><%= post.title %></h1>
+                </header>
+                <% if(post.images.length > 0) {%>
+                <div class="card__image">
+                    <img src="/<%= post.images[0] %>" id="image" alt="<%=post.title%>">
+                </div>
+                <% }%>
+                <div class="card__content">
+                    <p class="product__user"><a style="text-decoration:none;" href="/profile/<%=post.poster._id%>"><%if(post.poster.user_name.length > 0){%><%= post.poster.user_name%><%}else{%><%=post.poster.first_name%> <%=post.poster.last_name%><%}%></a></p>
+                    <h2 class="product__price"> $<%= post.date.toString() %></h2>
+                    <p class="product__description"><%= post.short_description %></p>
+                </div>
+                <div class="card__actions">
+                    <a href="/post/<%= post._id %>"><button class="btn">Details</button></a>
+                    <form action="/cart" method="POST">
+                        <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                        <button class="btn" type="submit">Add to Cart</button>
+                        <input type="hidden" name="productId" value="<%= post._id %>">
+                    </form>
+                    <% if(isAuthenticated) {%>
+                        <form method="POST" action="/save/post/"<%=post._id%>>
+                            <button type="submit" class="btn" id="save_button">Save Post</button>
+                        <form>
+                    <%} %>
+                </div>
+            </article>
+            <% } %>
+        </div>
+        <section class="pagination">
+            <%for(var i=0;i<numPages;i++){%>
+                <a <%if(page==i+1){%>class="selectedPage"<%}else{%>class="unselectedPage"<%}%> href="/?page=<%=i+1%>"><%=i+1%></a>
+            <%}%>
+        </section>
+        <% } else { %>
+            <h1>No Posts Found!</h1>
+            <a href="/add-post"><p>Create the first Post</p></a>
+            <section class="pagination">
+                <%for(var i=0;i<numPages;i++){%>
+                    <a <%if(page==i+1){%>class="selectedPage"<%}else{%>class="unselectedPage"<%}%> href="/?page=<%=i+1%>"><%=i+1%></a>
+                <%}%>
+            </section>
+        <% } %>
+    </main>
+</body>
+</html>

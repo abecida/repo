@@ -1,0 +1,156 @@
+<%- include('../includes/header.ejs')%>
+</head>
+<body>
+    <%- include('../includes/head.ejs') %>
+    <h2 style="text-align:center;"><%=user.first_name%> <%=user.last_name%></h2>
+    <br>
+    <main>
+        <%if(message){%>
+        <div class="user-message user-message--error"><h style="color:red;"><%=message%></h></div>
+        <% }%>
+        <% if(isAuthenticated) {%>
+            <h>Already Logged In</h>
+            <form action="/logout" method="POST">
+                <button class="btn" type="submit">Logout</button>
+            </form>
+        <% } else {%>
+        <form class="login-form" action="/finish-signup" method="POST" enctype="multipart/form-data" style="text-align:center;align-items:center;">
+            <div class="form-control">
+                <label for="image">Set a Profile Picture</label>
+                <input type="file" name="image" id="image" style="width:10rem;margin:auto;">
+            </div>
+            <br>
+            <div class="form-control">
+                <label for="major">What is your major?</label>
+                <input type="text" name="major" id="major" onkeyup="getSubjects()" style="width:15rem;">
+                <label for="major" style="opacity:0;">What is your major?</label>
+                <div id="dropdown" style="list-style: none;width:15rem;"></div>
+                <input type="hidden" id="subjectId" name="subjectId">
+            </div>
+            <br>
+            <div class="form-control" id="username_div" style="display:none;">
+                <label for="username">Pick a User Name</label>
+                <input type="text" name="username" id="username" onkeyup="checkUsername()">
+                <div id="username_error"></div>
+            </div>
+            <input type="hidden" name="userId" id="userId" value="<%=userId%>">
+            <button id="btn" class="btn" type="submit" style="display:none;">Finish</button>
+        </form>
+            
+        <%}%>
+    </main>
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if(event.keyCode == 13) {
+                var selected_subject = document.getElementsByName("hovered")[0];
+                chose_subject(selected_subject.className);
+                if(event.target.nodeName =='INPUT'&&event.target.type=='text'){
+                    event.preventDefault();
+                    document.getElementById("username").focus();
+                    return false;
+                } 
+            } else if(event.keyCode == 40) {
+                // arrow down
+                var dropdown = document.getElementById("dropdown");
+                if(dropdown.hasChildNodes()) {
+                    //
+                }
+            } else if(event.keyCode == 38) {
+                // arrow up
+            }
+        });
+        function checkUsername() {
+            const username = document.getElementById("username").value;
+            const fetch_url = '/check/username?name='+username;
+            fetch(fetch_url, {
+                method: 'GET'
+            })
+            .then(result => {
+                return result.json();
+            })
+            .then(data => {
+                var dropdown = document.getElementById("username_error");
+                var button = document.getElementById("btn");
+                while (dropdown.hasChildNodes()) {
+                    dropdown.removeChild(dropdown.childNodes[0]);
+                }
+                if(document.getElementById("username").value.length > 0){
+                    var message = document.createElement("P");
+                    if(data.cool == true) {
+                        message.appendChild(document.createTextNode("User Name is Available"));
+                        message.style.color = 'green';
+                        button.style.display = '';    
+                    } else {
+                        message.appendChild(document.createTextNode("User Name is Taken"));
+                        message.style.color = 'red';
+                        button.style.display = 'none';
+                    }
+                    dropdown.appendChild(message);
+                } else {
+                    button.style.display = 'none';
+                }
+            })
+        };
+
+        function getSubjects() {
+            const subject = document.getElementById("major").value;
+            const fetch_url = '/get/subjects?name='+subject;
+            fetch(fetch_url, {
+                method: 'GET'
+            })
+            .then(result => {
+                return result.json();
+            })
+            .then(data => {
+                var dropdown = document.getElementById("dropdown");
+                while (dropdown.hasChildNodes()) {
+                    dropdown.removeChild(dropdown.childNodes[0]);
+                }
+                dropdown.style.border = '';
+                if(subject.length > 0){
+                    dropdown.style.border = '1px solid black';
+                    var index = 0;
+                    while(index < data.subjects.length){
+                        const subject = data.subjects[index];
+                        var btn = document.createElement("LI");
+                        var name = subject.name;
+                        btn.appendChild(document.createTextNode(subject.name));
+                        const subjectId = subject._id;
+                        btn.setAttribute("onclick", `chose_subject('${name}/${subjectId}')`);
+                        btn.setAttribute("id", "college");
+                        btn.setAttribute("class", `${name}/${subjectId}`);
+                        btn.setAttribute("onmouseover", 'add_class(this)');
+                        btn.setAttribute("onmouseout", 'remove_class(this)');
+                        btn.style.marginBottom = "0.1rem;";
+                        dropdown.appendChild(btn);
+                        index += 1;
+                    }
+                }
+            })
+            .catch(err => console.log(err));
+        }
+
+        function add_class(subject){
+            subject.setAttribute("name", "hovered");
+        }
+
+        function remove_class(subject){
+            subject.setAttribute("name", "");
+        }
+
+        function chose_subject(word) {
+            console.log(word);
+            const subject_name = word.split('/')[0];
+            const subjectId = word.split('/')[1];
+            document.getElementById("major").value = subject_name;
+            var dropdown = document.getElementById("dropdown");
+            while (dropdown.hasChildNodes()) {
+                dropdown.removeChild(dropdown.childNodes[0]);
+            }
+            document.getElementById("subjectId").value = subjectId;
+            document.getElementById("username_div").style.display = '';
+            dropdown.style.border = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<%- include('../includes/header.ejs')%>
+<link rel="stylesheet" href="/css/add.css">
+</head>
+<body>
+    <%- include('../includes/head.ejs') %>
+    <%if(isAuthenticated){%>
+    <div id="" style="max-width:35rem;margin-left:23%;margin-top:2rem;display:flex;justify-content:space-between;">
+        <p style="font-size:2.5rem"  id="selected">Main</p>
+        <p style="font-size:2.5rem">|</p>
+        <p class="sub_category" style="font-size:2.5rem" onclick="switch_ui(this)">Code</p>
+        <p style="font-size:2.5rem">|</p>
+        <p class="sub_category" style="font-size:2.5rem" onclick="switch_ui(this)">Resources</p>
+    </div>
+    <main id="" style="margin-left:23%;margin-top: 0.2rem;padding:1rem, 0rem;padding-left:0rem;">
+        <form class="post-form" action="/admin/add" method="POST" enctype="multipart/form-data" style="width:100%;display:flex;flex-direction:column;justify-content:space-between;">
+            <div id="Main_category">
+                <div class="form-control">
+                    <label for="title" id="post_label">Title</label>
+                    <input class="tab" type="text" name="title" id="title" style="width:50rem;height:3rem;font-size:1.5rem" placeholder="Simple Title">
+                </div>
+                <div class="form-control">
+                    <label for="price" id="post_label">Category</label>
+                    <input class="tab" type="text" name="category" id="category" style="width:50rem;height:3rem;font-size:1.5rem" placeholder="A Specific Field in Computer Science">
+                </div>
+                <div class="form-control">
+                    <label for="description" id="post_label">Description</label>
+                    <textarea placeholder="A Succinct Description for All Readers" class="tab" name="description" id="description" rows="5" style="font-size:1.5rem;max-height:20rem;width:50rem;"></textarea>
+                </div>
+            </div>
+            <div id="Code_category" style="">
+                <div class="form-control">
+                    <label for="price" id="post_label">Github Repo</label>
+                    <input class="tab" type="text" name="github" id="category" style="width:50rem;height:3rem;font-size:1.5rem" placeholder="Github Repository">
+                </div>
+                <div class="form-control">
+                    <label for="description" id="post_label">Highlights</label>
+                    <textarea placeholder="More Technical Description of Your Project maybe with some code" class="tab" name="highlights" id="description" rows="100" style="font-size:1.5rem;max-height:25rem;width:50rem;"></textarea>
+                    <div id="" style="display:flex;justify-content:space-between;">
+                        <p>Add Another Page</p>
+                        <span class="glyphicon">&#43;</span>
+                    </div>
+                </div>
+                <div class="form-control">
+                    <label for="description" id="post_label">Unfinished</label>
+                    <textarea placeholder="If you have any code or method that is unfinished or want to write, post it here so other people can take a look and contribute to your project." class="tab" name="unfinished" id="description" rows="100" style="font-size:1.5rem;max-height:30rem;width:50rem;"></textarea>
+                </div>
+                <!-- Numbers -->
+            </div>
+            <div id="Resources_category" style="">
+                <p>Just like you cite sources you referred to after writing a paper, I think it would be useful for people if you mentioned the resources you looked into while pursuing this project. This could be anything, Andrew Ng's Deep Learning Course on Coursera, an O'Reilley Book etc. </p>
+                <div class="form-control">
+                    <label for="description" id="post_label">CS Citation</label>
+                    <textarea placeholder="Example Formats:\n1. Book - Deep Learning:  'Deep Learning with Python' O'Reilley\n2.Online Course - NLP:  'CS 231n' https://www.youtube.com/watch?v=vT1JzLTH4G4&list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv\n3.Online Course - Node.js : 'NodeJS The Complete Guide' https://www.udemy.com/course/nodejs-the-complete-guide/learn/lecture/11954248#overview " class="tab" name="description" id="description" rows="20" style="width:50rem;max-height:20rem;font-size:1.5rem"></textarea>
+                </div>
+                <div class="form-control">
+                    <label for="title" id="post_label">Title</label>
+                    <input class="tab" type="text" name="source_title" id="title" style="width:50rem;height:3rem;font-size:1.5rem" placeholder="Simple Title">
+                </div>
+                <div class="form-control">
+                    <label for="price" id="post_label">Link</label>
+                    <input class="tab" type="text" name="source_link" id="category" style="width:50rem;height:3rem;font-size:1.5rem" placeholder="A Specific Field in Computer Science">
+                </div>
+            </div>
+            <button class="btn btn-add_post" type="submit" style="background-color:rgb(0, 50, 98);margin-top:4rem;">Post</button>
+        </form>
+    </main>
+    <%} else{%>
+        <script>
+            window.onload = function(){
+                setTimeout(function(){
+                    window.location.href = "/login";
+                },1);
+            };
+        </script>
+    <%}%>
+    <script>
+        function switch_ui(category_element) {
+            const selected_category = category_element.textContent;
+            var current_element = document.getElementById("selected");
+            var current_category = current_element.textContent;
+            var new_main = category_element;
+            console.log(selected_category, current_category);
+            new_main.id = "selected";
+            new_main.className = "none";
+            new_main.setAttribute("onclick", "");
+            current_element.className = "sub_category";
+            current_element.id= "none";
+            current_element.setAttribute("onclick", "switch_ui(this)");
+            document.getElementById(current_category+"_category").style.display = 'none';
+            document.getElementById(selected_category+"_category").style.display = 'block';
+        }
+    </script>
+</body>
+</html>

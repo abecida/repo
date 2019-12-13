@@ -1,0 +1,56 @@
+#post_label {
+    color: rgb(0, 50, 98);
+    font-size: 1.7rem;
+}
+
+.post_form {
+    justify-content: space-between;
+}
+
+.form-control {
+    display:flex;
+    flex-direction:column;
+    margin-bottom: 1.5rem;
+    /*background-color:hsl(210, 75%, 89%);*/
+    max-width: 21.5rem;
+}
+
+.btn-add_post{
+    width: 15rem;
+    height:3rem;
+}
+
+#selected {
+    color: rgb(253, 181, 21);
+}
+
+.tab {
+    padding-left: 1rem;
+}
+
+.sub_category:hover{
+    color: rgb(188, 155, 106); 
+    cursor:pointer;
+}
+
+#Code_category{
+    display:none;
+}
+
+#Unfinished_category{
+    display:none;
+}
+
+#Resources_category{
+    display:none;
+}
+
+#code {
+    overflow-x: hidden;
+    overflow-x: auto;
+}
+
+#description {
+    overflow-x: hidden;
+    overflow-x: auto;
+}
