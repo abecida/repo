@@ -1,0 +1,7 @@
+{
+    "env": {
+        "MONGO_USER": "abecid",
+        "MONGO_PASSWORD": "chaemin3211",
+        "MONGO_DEFAULT_DATABASE": "fish"
+    }
+}
